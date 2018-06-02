@@ -14,10 +14,10 @@ import (
 	"errors"
 	"net"
 
-	"github.com/beito123/go-raknet/binary"
-	"github.com/beito123/go-raknet/protocol"
+	"github.com/SpecterTeam/go-raknet/binary"
+	"github.com/SpecterTeam/go-raknet/protocol"
 
-	raknet "github.com/beito123/go-raknet"
+	raknet "github.com/SpecterTeam/go-raknet"
 )
 
 //
@@ -121,7 +121,7 @@ func (session *Session) handlePacket(pk raknet.Packet) {
 		}
 
 		hpk := &protocol.NewIncomingConnection{
-			ServerAddress:   *session.SystemAddress(),
+			ServerAddress:   session.SystemAddress(),
 			ClientTimestamp: npk.ServerTimestamp,
 			ServerTimestamp: npk.ClientTimestamp,
 		}

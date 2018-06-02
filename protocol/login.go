@@ -9,7 +9,7 @@ package protocol
  * http://opensource.org/licenses/mit-license.php
  */
 
-import "github.com/beito123/go-raknet"
+import "github.com/SpecterTeam/go-raknet"
 
 type AlreadyConnected struct {
 	BasePacket

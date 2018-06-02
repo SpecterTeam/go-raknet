@@ -14,7 +14,7 @@ import "time"
 const (
 
 	// Version is version of go-raknet library
-	Version = "1.0.0"
+	Version = "1.0.1"
 
 	// NetworkProtocol is a version of Raknet protocol
 	NetworkProtocol = 8

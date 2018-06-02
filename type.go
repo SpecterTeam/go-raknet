@@ -59,7 +59,7 @@ var ConnectionVanilla = ConnectionType{
 }
 
 // ConnectionGoRaknet is a connection from go-raknet.
-var ConnectionGoRaknet = ConnectionType{
+var ConnectionGoRaknet = &ConnectionType{
 	UUID:    uuid.FromStringOrNil("495248b9-d485-4389-acd0-175fdb2233cf"),
 	Name:    "GoRaknet",
 	Lang:    "Go",

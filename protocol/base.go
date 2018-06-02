@@ -10,8 +10,8 @@ package protocol
  */
 
 import (
-	"github.com/beito123/go-raknet"
-	"github.com/beito123/go-raknet/binary"
+	"github.com/SpecterTeam/go-raknet"
+	"github.com/SpecterTeam/go-raknet/binary"
 )
 
 type BasePacket struct {

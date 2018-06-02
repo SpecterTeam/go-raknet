@@ -10,8 +10,8 @@ package protocol
  */
 
 import (
-	"github.com/beito123/go-raknet"
-	"github.com/beito123/go-raknet/identifier"
+	"github.com/SpecterTeam/go-raknet"
+	"github.com/SpecterTeam/go-raknet/identifier"
 )
 
 type ConnectedPing struct {

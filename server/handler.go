@@ -12,7 +12,7 @@ package server
 import (
 	"net"
 
-	raknet "github.com/beito123/go-raknet"
+	raknet "github.com/SpecterTeam/go-raknet"
 )
 
 // Handler handles packets, connections and more from Raknet server

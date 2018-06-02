@@ -16,12 +16,12 @@ import (
 	"net"
 	"time"
 
-	"github.com/beito123/go-raknet/identifier"
+	"github.com/SpecterTeam/go-raknet/identifier"
 
 	"github.com/beito123/binary"
 
-	raknet "github.com/beito123/go-raknet"
-	"github.com/beito123/go-raknet/protocol"
+	raknet "github.com/SpecterTeam/go-raknet"
+	"github.com/SpecterTeam/go-raknet/protocol"
 	"github.com/orcaman/concurrent-map"
 	"github.com/satori/go.uuid"
 )
@@ -46,7 +46,7 @@ type Server struct {
 	Handler        Handler
 	MaxConnections int
 	MTU            int
-	Identifier     identifier.Identifier
+	Identifier     identifier.Minecraft
 	protocol       *protocol.Protocol
 
 	UUID uuid.UUID
@@ -361,7 +361,7 @@ func (ser *Server) handlePacket(ctx context.Context, addr *net.UDPAddr, b []byte
 
 		rpk := &protocol.OpenConnectionResponseTwo{}
 		rpk.ServerGuid = ser.uid
-		rpk.ClientAddress = *ser.newSystemAddress(addr)
+		rpk.ClientAddress = ser.newSystemAddress(addr)
 		rpk.MTU = npk.MTU
 		rpk.EncrtptionEnabled = false
 

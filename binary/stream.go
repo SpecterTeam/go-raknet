@@ -16,7 +16,7 @@ import (
 	"strings"
 
 	"github.com/beito123/binary"
-	"github.com/beito123/go-raknet"
+	"github.com/SpecterTeam/go-raknet"
 	"github.com/satori/go.uuid"
 )
 

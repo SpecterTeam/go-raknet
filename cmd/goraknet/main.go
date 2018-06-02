@@ -8,11 +8,11 @@ import (
 
 	"github.com/Sirupsen/logrus"
 	"github.com/beito123/binary"
-	"github.com/beito123/go-raknet"
-	"github.com/beito123/go-raknet/identifier"
+	"github.com/SpecterTeam/go-raknet"
+	"github.com/SpecterTeam/go-raknet/identifier"
 	"github.com/satori/go.uuid"
 
-	"github.com/beito123/go-raknet/server"
+	"github.com/SpecterTeam/go-raknet/server"
 )
 
 func main() {

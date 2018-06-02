@@ -1,6 +1,6 @@
 # go-raknet
 
-go-raknet is Raknet library for Medaka written in Go.
+go-raknet is Raknet library for [SpecterGO](https://github.com/SpecterTeam/SpecterGO) written in Go.
 
 The almost codes are based on [JRaknet](https://github.com/JRakNet/JRakNet) (by [JRaknet-Team](https://github.com/JRakNet) and [Whirvis](https://github.com/Whirvis)).
 
@@ -32,9 +32,6 @@ These codes are licensed under the MIT License.
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
     SOFTWARE.
 
-## Special Thanks
-
-Thank you very much!
 
 ## Based on
 

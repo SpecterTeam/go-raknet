@@ -1,6 +1,6 @@
 package identifier
 
-import raknet "github.com/beito123/go-raknet"
+import raknet "github.com/SpecterTeam/go-raknet"
 
 /*
  * go-raknet
@@ -23,8 +23,8 @@ type Base struct {
 	Connection *raknet.ConnectionType
 }
 
-func (id Base) ConnectionType() raknet.ConnectionType {
-	return *id.Connection
+func (id Base) ConnectionType() *raknet.ConnectionType {
+	return id.Connection
 }
 
 func (id Base) Build() string {
