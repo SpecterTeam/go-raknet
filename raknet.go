@@ -1,15 +1,24 @@
+/**
+ *     SpecterGO  Copyright (C) 2018  SpecterTeam
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package raknet
 
-import "time"
-
-/*
- * go-raknet
- *
- * Copyright (c) 2018 beito
- *
- * This software is released under the MIT License.
- * http://opensource.org/licenses/mit-license.php
- */
+import (
+	"time"
+)
 
 const (
 
@@ -46,9 +55,8 @@ var Magic = []byte{0x00, 0xff, 0xff, 0x00, 0xfe, 0xfe, 0xfe, 0xfe, 0xfd, 0xfd, 0
 var MaxPacketsPerSecond = 500
 
 var (
-
 	// SendInterval
-	SendInterval             time.Duration = 50 * time.Millisecond
+	SendInterval                           = 50 * time.Millisecond
 	RecoverySendInterval                   = SendInterval
 	PingSendInterval                       = 2500 * time.Millisecond
 	DetectionSendInterval                  = PingSendInterval * 2

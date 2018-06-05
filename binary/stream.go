@@ -1,13 +1,20 @@
-package binary
-
-/*
- * go-raknet
+/**
+ *     SpecterGO  Copyright (C) 2018  SpecterTeam
  *
- * Copyright (c) 2018 beito
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- * This software is released under the MIT License.
- * http://opensource.org/licenses/mit-license.php
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package binary
 
 import (
 	"bytes"
@@ -97,12 +104,12 @@ func (rs *RaknetStream) Address() (addr string, port uint16, err error) {
 
 	if ver == 4 {
 		for i := 0; i < 4; i++ {
-			bytes, err := rs.Byte()
+			bts, err := rs.Byte()
 			if err != nil {
 				return "", 0, err
 			}
 
-			addr := addr + strconv.Itoa(int(^bytes&0xff))
+			addr := addr + strconv.Itoa(int(^bts&0xff))
 			if i < 3 {
 				addr += "."
 			}

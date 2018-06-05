@@ -1,13 +1,20 @@
-package server
-
-/*
- * go-raknet
+/**
+ *     SpecterGO  Copyright (C) 2018  SpecterTeam
  *
- * Copyright (c) 2018 beito
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- * This software is released under the MIT License.
- * http://opensource.org/licenses/mit-license.php
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package server
 
 import (
 	"context"
@@ -20,10 +27,11 @@ import (
 
 	"github.com/beito123/binary"
 
-	raknet "github.com/SpecterTeam/go-raknet"
+	"github.com/SpecterTeam/go-raknet"
 	"github.com/SpecterTeam/go-raknet/protocol"
 	"github.com/orcaman/concurrent-map"
 	"github.com/satori/go.uuid"
+	"github.com/SpecterTeam/SpecterGO/utils"
 )
 
 // ServerState is a server state
@@ -42,7 +50,7 @@ var (
 )
 
 type Server struct {
-	Logger         raknet.Logger
+	Logger         utils.Logger
 	Handler        Handler
 	MaxConnections int
 	MTU            int
@@ -195,8 +203,6 @@ func (ser *Server) Serve(ctx context.Context, l *net.UDPConn) error {
 
 		ser.handlePacket(ctx, addr, buf)
 	}
-
-	return nil
 }
 
 func (ser *Server) handlePacket(ctx context.Context, addr *net.UDPAddr, b []byte) {
