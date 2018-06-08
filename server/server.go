@@ -49,13 +49,17 @@ var (
 	errInvalidMaxAsyncTaskCount = errors.New("invalid max async task count")
 )
 
+type Handlers []Handler
+
 type Server struct {
-	Logger         utils.Logger
-	Handler        Handler
+	Logger         *utils.Logger
+	Handlers       Handlers
 	MaxConnections int
 	MTU            int
 	Identifier     identifier.Minecraft
 	protocol       *protocol.Protocol
+
+	cancel         context.CancelFunc
 
 	UUID uuid.UUID
 
@@ -71,6 +75,21 @@ type Server struct {
 
 	sessions         cmap.ConcurrentMap
 	blockedAddresses cmap.ConcurrentMap
+}
+
+func (s *Server) Cancel() context.CancelFunc {
+	return s.cancel
+}
+
+func (s *Server) SetCancel(cancel context.CancelFunc) {
+	s.cancel = cancel
+}
+
+func (s *Server) Shutdown() {
+	if s.IsRunning() {
+		f := s.Cancel()
+		f()
+	}
 }
 
 func (ser *Server) State() ServerState {
@@ -101,6 +120,12 @@ func (ser *Server) init() {
 	if ser.MTU < raknet.MinMTU || ser.MTU > raknet.MaxMTU {
 		ser.MTU = raknet.MaxMTU
 	}
+}
+
+func (ser *Server) Start(ip string, port int) {
+	ctx,cancel := context.WithCancel(context.Background())
+	ser.SetCancel(cancel)
+	go ser.ListenAndServe(ctx, &net.UDPAddr{IP:net.ParseIP(ip), Port:port,})
 }
 
 func (ser *Server) ListenAndServe(ctx context.Context, addr *net.UDPAddr) error {
@@ -143,8 +168,8 @@ func (ser *Server) Serve(ctx context.Context, l *net.UDPConn) error {
 			ser.Logger.Warn(err)
 		}
 
-		if ser.Handler != nil {
-			ser.Handler.CloseServer()
+		for _,handler := range ser.Handlers {
+			handler.CloseServer()
 		}
 	}()
 
@@ -175,8 +200,8 @@ func (ser *Server) Serve(ctx context.Context, l *net.UDPConn) error {
 		}
 	}()
 
-	if ser.Handler != nil {
-		ser.Handler.StartServer()
+	for _,handler := range ser.Handlers {
+		handler.StartServer()
 	}
 
 	// Reads packets from udp socket, and handles them
@@ -215,17 +240,19 @@ func (ser *Server) handlePacket(ctx context.Context, addr *net.UDPAddr, b []byte
 		return
 	}
 
-	ser.Logger.Debug("handle a packet from" + addr.String())
+	ser.Logger.Debug("handle a packet from " + addr.String())
 
 	// new packet
 
 	pk, ok := ser.protocol.Packet(b[0])
 	if !ok {
-		ser.Logger.Warn("unknown packet id:", pk.ID())
+		ser.Logger.Warn("unknown packet id: 0x", pk.ID())
 		return
 	}
 
 	pk.SetBytes(b)
+
+	fmt.Printf("%#v", b)
 
 	switch npk := pk.(type) {
 	case *protocol.UnconnectedPing, *protocol.UnconnectedPingOpenConnections:
@@ -250,6 +277,10 @@ func (ser *Server) handlePacket(ctx context.Context, addr *net.UDPAddr, b []byte
 			return
 		}
 
+		for _,handler := range ser.Handlers {
+			handler.HandlePing(addr) // ummm..., should support changing by handler...?
+		}
+
 		pong := &protocol.UnconnectedPong{
 			Timestamp:  ping.Timestamp,
 			PongID:     ser.pongid,
@@ -263,11 +294,16 @@ func (ser *Server) handlePacket(ctx context.Context, addr *net.UDPAddr, b []byte
 			return
 		}
 
-		fmt.Printf("%#v", pong.Bytes())
-
 		ser.SendPacket(addr, pong)
 
 		return
+	}
+
+	for _,handler := range ser.Handlers {
+		handler.HandleRawPacket(addr, pk)
+	}
+
+	switch npk := pk.(type) {
 	case *protocol.OpenConnectionRequestOne:
 		err := npk.Decode()
 		if err != nil {
@@ -392,6 +428,10 @@ func (ser *Server) handlePacket(ctx context.Context, addr *net.UDPAddr, b []byte
 
 		ser.SendPacket(addr, rpk)
 
+		for _,handler := range ser.Handlers {
+			handler.OpenConn(session.GUID, addr)
+		}
+
 		return
 	}
 
@@ -453,7 +493,7 @@ func (ser *Server) restoreSession(addr net.Addr) (*Session, bool) {
 
 	session, ok := value.(*Session)
 	if !ok {
-		ser.Logger.Warn("Invaild value, wants *Session")
+		ser.Logger.Warn("Invalid value, wants *Session")
 		return nil, false
 	}
 
@@ -564,10 +604,13 @@ func (ser *Server) CloseSessionGUID(guid int64, reason string) error {
 
 func (ser *Server) SendPacket(addr *net.UDPAddr, pk raknet.Packet) {
 	ser.SendRawPacket(addr, pk.Bytes())
+	for _,handler := range ser.Handlers {
+		handler.HandleSendPacket(addr, pk)
+	}
 }
 
 func (ser *Server) SendRawPacket(addr *net.UDPAddr, b []byte) {
-	go func() {
+	go func() {  // TODO: rewrite
 		ser.conn.WriteToUDP(b, addr)
 	}()
 }

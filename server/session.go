@@ -46,7 +46,7 @@ const (
 type Session struct {
 	Addr              *net.UDPAddr
 	Conn              *net.UDPConn
-	Logger            utils.Logger
+	Logger            *utils.Logger
 	Server            *Server
 	GUID              int64
 	MTU               int
@@ -148,12 +148,12 @@ func (session *Session) handlePacket(pk raknet.Packet) {
 		session.Server.CloseSession(session.Addr, "Server disconnected")
 	default:
 		if npk.ID() >= protocol.IDUserPacketEnum { // user packet
-			if session.Server.Handler != nil {
-				session.Server.Handler.HandlePacket(session.GUID, npk)
+			for _,handler := range session.Server.Handlers {
+				handler.HandlePacket(session.GUID, npk)
 			}
 		} else { // unknown packet
-			if session.Server.Handler != nil {
-				session.Server.Handler.HandleUnknownPacket(session.GUID, npk)
+			for _,handler := range session.Server.Handlers {
+				handler.HandleUnknownPacket(session.GUID, npk)
 			}
 		}
 	}
@@ -162,6 +162,10 @@ func (session *Session) handlePacket(pk raknet.Packet) {
 func (session *Session) handleCustomPacket(pk *protocol.CustomPacket) {
 	if session.State == StateDisconected {
 		return
+	}
+
+	for _,handler := range session.Server.Handlers {
+		handler.HandlePacket(session.GUID, pk)
 	}
 
 }

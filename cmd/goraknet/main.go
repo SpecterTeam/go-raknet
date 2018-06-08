@@ -49,7 +49,7 @@ func main() {
 	}
 
 	ser := &server.Server{
-		Logger:              logger,
+		Logger:              &logger,
 		MaxConnections:      10,
 		MTU:                 1472,
 		Identifier:          id,

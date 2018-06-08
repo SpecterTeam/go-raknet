@@ -32,13 +32,13 @@ type Handler interface {
 	CloseServer()
 
 	// HandlePing is called on a ping packet is received
-	HandlePing(addr *net.Addr)
+	HandlePing(addr net.Addr)
 
 	// OpenPreConn is called before a new session is created
-	OpenPreConn(addr *net.Addr)
+	OpenPreConn(addr net.Addr)
 
 	// OpenConn is called on a new session is created
-	OpenConn(uid int64, addr *net.Addr)
+	OpenConn(uid int64, addr net.Addr)
 
 	// ClosePreConn is called before a session is closed
 	ClosePreConn(uid int64)
@@ -46,12 +46,16 @@ type Handler interface {
 	// CloseConn is called on a session is closed
 	CloseConn(uid int64)
 
+	// HandleSendPacket handles a packet sent from the server to a client
+	HandleSendPacket(addr net.Addr, pk raknet.Packet)
+
 	// HandleRawPacket handles a raw packet no processed in Raknet server
-	HandleRawPacket(uid int64, pk raknet.Packet)
+	HandleRawPacket(addr net.Addr, pk raknet.Packet)
 
 	// HandlePacket handles a message packet
 	HandlePacket(uid int64, pk raknet.Packet)
 
 	// HandleUnknownPacket handles a unknown packet
 	HandleUnknownPacket(uid int64, pk raknet.Packet)
+
 }
