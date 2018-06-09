@@ -37,8 +37,8 @@ type Minecraft struct {
 	ServerName        string
 	ServerProtocol    int
 	VersionTag        string
-	OnlinePlayerCount int
-	MaxPlayerCount    int
+	OnlinePlayersCount int
+	MaxPlayersCount    int
 	GUID              int64
 	WorldName         string
 	Gamemode          string
@@ -55,17 +55,53 @@ func (id Minecraft) Build() string {
 			id.ServerName + MinecraftSeparator +
 			strconv.Itoa(id.ServerProtocol) + MinecraftSeparator +
 			id.VersionTag + MinecraftSeparator +
-			strconv.Itoa(id.OnlinePlayerCount) + MinecraftSeparator +
-			strconv.Itoa(id.MaxPlayerCount)
+			strconv.Itoa(id.OnlinePlayersCount) + MinecraftSeparator +
+			strconv.Itoa(id.MaxPlayersCount)
 	}
 
 	return MinecraftHeader + MinecraftSeparator +
 		id.ServerName + MinecraftSeparator +
 		strconv.Itoa(id.ServerProtocol) + MinecraftSeparator +
 		id.VersionTag + MinecraftSeparator +
-		strconv.Itoa(id.OnlinePlayerCount) + MinecraftSeparator +
-		strconv.Itoa(id.MaxPlayerCount) + MinecraftSeparator +
+		strconv.Itoa(id.OnlinePlayersCount) + MinecraftSeparator +
+		strconv.Itoa(id.MaxPlayersCount) + MinecraftSeparator +
 		strconv.FormatInt(id.GUID, 10) + MinecraftSeparator +
 		id.WorldName + MinecraftSeparator +
 		id.Gamemode
+}
+
+func (id *Minecraft) SetServerName(name string) {
+	id.ServerName = name
+}
+
+func (id *Minecraft) SetServerProtocol(protocol int) {
+	id.ServerProtocol = protocol
+}
+
+func (id *Minecraft) SetVersionTag(version string) {
+	id.VersionTag = version
+}
+
+func (id *Minecraft) SetOnlinePlayersCount(count int) {
+	id.OnlinePlayersCount = count
+}
+
+func (id *Minecraft) SetMaxPlayersCount(max int) {
+	id.MaxPlayersCount = max
+}
+
+func (id *Minecraft) SetGUID(guid int64) {
+	id.GUID = guid
+}
+
+func (id *Minecraft) SetWorldName(name string) {
+	id.WorldName = name
+}
+
+func (id *Minecraft) SetGameMode(gamemode string) {
+	id.Gamemode = gamemode
+}
+
+func (id *Minecraft) SetLegacy(l bool) {
+	id.Legacy = l
 }
